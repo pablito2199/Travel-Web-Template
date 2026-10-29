@@ -60,6 +60,9 @@ Se muestran **en el orden de la lista** y generan automáticamente el menú. Tod
 ### `transport`
 `title`, `mode` (`bus`, `train` o `car`), `from`, `to`, `date`, `hour`, `link` *(opcional)*.
 
+### `memories` (bloque propio, no es una sección)
+`enabled` (activa o desactiva el bloque), `title`, `description` *(opcional)* y `driveLink`: enlace de una carpeta de Google Drive compartida como «Cualquiera con el enlace». Se muestra siempre justo encima de los accesos rápidos, con una cuadrícula con las fotos de la carpeta (las nuevas aparecen solas) y un botón «Abrir en Drive». Se edita en «Personalizar viaje», debajo del modo fiesta.
+
 ## 5. Ejecutar
 
 ```bash

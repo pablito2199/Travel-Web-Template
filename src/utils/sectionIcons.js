@@ -1,5 +1,5 @@
 import { FaBusSimple, FaCarSide, FaPlaneDeparture, FaTrainSubway } from 'react-icons/fa6';
-import { FiLink, FiMapPin } from 'react-icons/fi';
+import { FiImage, FiLink, FiMapPin } from 'react-icons/fi';
 import { MdHotel } from 'react-icons/md';
 
 const TRANSPORT_ICONS = {
@@ -23,4 +23,4 @@ export const getSectionIcon = (section) => {
     }
 };
 
-export { FiLink as LinkIcon, TRANSPORT_ICONS };
+export { FiImage as MemoriesIcon, FiLink as LinkIcon, TRANSPORT_ICONS };

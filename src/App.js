@@ -6,13 +6,14 @@ import FlightSection from './components/FlightSection/FlightSection';
 import FooterSection from './components/FooterSection/FooterSection';
 import HeaderSection from './components/HeaderSection/HeaderSection';
 import HotelSection from './components/HotelSection/HotelSection';
+import MemoriesSection from './components/MemoriesSection/MemoriesSection';
 import SideNav from './components/SideNav/SideNav';
 import TravelSection from './components/TravelSection/TravelSection';
 import tripConfig from './config/tripConfig.json';
 import { DEFAULT_THEME, resolveTheme, themes, toCssVars } from './config/themes';
 import usePartyMode from './hooks/usePartyMode';
 import { createColorPicker } from './utils/colors';
-import { getSectionIcon, LinkIcon } from './utils/sectionIcons';
+import { getSectionIcon, LinkIcon, MemoriesIcon } from './utils/sectionIcons';
 import './styles/shared.css';
 
 const partyAsset = (file) => (file ? `${process.env.PUBLIC_URL}/party/${file}` : '');
@@ -137,9 +138,11 @@ function App() {
         meta = {},
         theme: themeCfg = {},
         partyMode = {},
+        memories = {},
         quickLinks: rawQuickLinks = [],
         sections: rawSections = []
     } = config;
+    const memoriesEnabled = Boolean(memories.enabled);
     const partyEnabled = Boolean(partyMode.enabled && partyMode.audio);
     const themeMode = themeCfg.mode;
     const themeDefaultName = themeCfg.name;
@@ -280,7 +283,11 @@ function App() {
     // Sección activa: la última cuyo inicio ya pasó la línea de referencia;
     // al llegar al final de la página se marca la última aunque sea corta.
     useEffect(() => {
-        const ids = [...sections.map(section => section.id), ...(quickLinks.length ? ['footer'] : [])];
+        const ids = [
+            ...sections.map(section => section.id),
+            ...(memoriesEnabled ? ['memories'] : []),
+            ...(quickLinks.length ? ['footer'] : [])
+        ];
 
         const updateActive = () => {
             if (lockedIdRef.current) {
@@ -324,7 +331,7 @@ function App() {
             window.removeEventListener('touchstart', releaseLock);
             window.removeEventListener('keydown', releaseLock);
         };
-    }, [sections, quickLinks]);
+    }, [sections, quickLinks, memoriesEnabled]);
 
     // Al pulsar un enlace se marca ese, aunque la sección no pueda alcanzar la línea de referencia
     const handleNavigate = (href) => {
@@ -367,6 +374,7 @@ function App() {
             icon: getSectionIcon(section),
             color: section.iconColor
         })),
+        ...(memoriesEnabled ? [{ label: 'Recuerdos', href: '#memories', icon: MemoriesIcon, color: palette.accent }] : []),
         ...(quickLinks.length ? [{ label: 'Accesos rápidos', href: '#footer', icon: LinkIcon, color: palette.accent }] : [])
     ];
     const canEditConfig = process.env.NODE_ENV === 'development';
@@ -413,6 +421,12 @@ function App() {
                         </div>
                     ))}
                 </main>
+
+                {memoriesEnabled && (
+                    <div id="memories" className="section-anchor memories-anchor">
+                        <MemoriesSection isPartyTime={isPartyTime} memories={memories} />
+                    </div>
+                )}
 
                 <div id="footer" className="section-anchor">
                     <FooterSection quickLinks={quickLinks} footerText={meta.footerText} />

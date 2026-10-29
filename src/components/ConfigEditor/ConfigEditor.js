@@ -522,6 +522,28 @@ function ConfigEditor({ config, onChange, onClose, saveState, error }) {
                             </div>
                         </div>
                     </section>
+
+                    <section className="editor-group">
+                        <div className={`party-card memories-edit-card ${draft.memories?.enabled ? 'is-on' : ''}`}>
+                            <div className="party-card-header">
+                                <span className="party-card-emoji" aria-hidden="true">📸</span>
+                                <div className="party-card-title">
+                                    <h3>Recuerdos</h3>
+                                    <p>Muestra las fotos de una carpeta de Google Drive encima de los accesos rápidos.</p>
+                                </div>
+                                <label className="party-switch">
+                                    <input type="checkbox" checked={Boolean(draft.memories?.enabled)} onChange={event => updateField('memories.enabled', event.target.checked)} />
+                                    <span className="party-switch-track" aria-hidden="true"></span>
+                                    <span className="party-switch-label">{draft.memories?.enabled ? 'Activado' : 'Desactivado'}</span>
+                                </label>
+                            </div>
+                            <div className="editor-fields party-card-fields">
+                                <Field label="Título" value={draft.memories?.title || ''} onChange={value => updateField('memories.title', value)} />
+                                <Field label="Descripción" value={draft.memories?.description || ''} onChange={value => updateField('memories.description', value)} />
+                                <Field label="Enlace de la carpeta de Google Drive (compartida con cualquiera que tenga el enlace)" value={draft.memories?.driveLink || ''} onChange={value => updateField('memories.driveLink', value)} />
+                            </div>
+                        </div>
+                    </section>
                 </div>
                 )}
 
