@@ -12,7 +12,16 @@ Los valores que trae son de ejemplo; reemplázalos por los tuyos. Los campos mar
 | `description` | Descripción del viaje |
 | `footerText` | Texto inferior del pie de página *(opcional)* |
 | `flagUrl` | URL de una imagen (p. ej. bandera) a ambos lados del título *(opcional)* |
-| `themeColor` | Color hexadecimal de la barra del navegador en móvil |
+| `heroImage` | Imagen de fondo de la cabecera: URL o ruta dentro de `public/` (p. ej. `"/portada.jpg"`). Sin ella se usa un degradado animado *(opcional)* |
+
+## 1b. `theme` – tema visual
+
+| Campo | Descripción |
+|---|---|
+| `name` | Tema por defecto: `ocean`, `forest`, `sunset`, `lavender`, `rose` o `graphite`. Cada uno tiene variante clara y oscura. Puedes crear más en `src/config/themes.js` |
+| `mode` | `light`, `dark` o `auto` (sigue el sistema del visitante) |
+| `allowThemePicker` | `true` (por defecto) muestra en el pie del menú un selector con todos los temas; la elección se recuerda |
+| `allowToggle` | `true` (por defecto) muestra en el pie del menú el botón claro/oscuro (se recuerda la elección) |
 
 ## 2. `partyMode` – modo fiesta *(opcional, desactivado por defecto)*
 
@@ -26,7 +35,7 @@ Usa solo música e imágenes que tengas derecho a utilizar.
 
 ## 3. `quickLinks` – accesos rápidos del pie
 
-Lista de `{ label, url, icon }`. `icon` puede ser `drive`, `hotel`, `map`, `money` o `link`. Añade o borra las que quieras; si la lista está vacía no se muestra el bloque.
+Lista de `{ label, url, icon, color }`. `icon` puede ser `drive`, `hotel`, `map`, `money` o `link`. `color` es opcional (hexadecimal); si falta, se asigna uno aleatorio. Añade o borra las que quieras; si la lista está vacía no se muestra el bloque.
 
 ## 4. `sections` – secciones del viaje
 
@@ -35,6 +44,7 @@ Se muestran **en el orden de la lista** y generan automáticamente el menú. Tod
 - `type`: `flights`, `hotel`, `city` o `transport`
 - `id`: identificador único, sin espacios (ancla del menú)
 - `menuLabel`: texto en el menú
+- `iconColor` *(opcional)*: color hexadecimal del icono y acentos de la sección. Si no se indica, se elige uno aleatorio (cambia en cada carga de la página)
 
 ### `flights`
 `title`, `items[]` con `from`, `to`, `date`, `hour`, `link` *(opcional, enlace al billete)*.
@@ -43,7 +53,7 @@ Se muestran **en el orden de la lista** y generan automáticamente el menú. Tod
 `name`, `address`, `checkInDate`, `checkInHour`, `checkOutDate`, `checkOutHour`, `nights`, y *(opcionales)* `reservationNumber`, `contact.phone`, `contact.email`, `driveLink`, `bookingLink`, `bookingCta`.
 
 ### `city`
-`title`, `description`, `mapUrl` (URL de «Insertar mapa» de Google Maps o de Mis Mapas), `editUrl` *(opcional; si existe aparece el botón «Editar mapa»)*, `color` (hexadecimal de acento).
+`title`, `description`, `mapUrl` (URL de «Insertar mapa» de Google Maps o de Mis Mapas), `editUrl` *(opcional; si existe aparece el botón «Editar mapa»)*.
 
 ### `transport`
 `title`, `mode` (`bus`, `train` o `car`), `from`, `to`, `date`, `hour`, `link` *(opcional)*.

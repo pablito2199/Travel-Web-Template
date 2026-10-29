@@ -5,10 +5,7 @@ function CitySection({ city, isPartyTime }) {
     const editUrl = city.editUrl || city.mapUrl;
 
     return (
-        <section
-            className={`city-section-card ${isPartyTime ? 'party' : ''}`}
-            style={city.color ? { '--city-color': city.color } : undefined}
-        >
+        <section className={`city-section-card ${isPartyTime ? 'party' : ''}`}>
             <div className="city-card-content">
                 <div className="city-top-row">
                     <div>

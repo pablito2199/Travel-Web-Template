@@ -5,11 +5,11 @@ import { SiGoogledrive } from "react-icons/si";
 import './styles.css';
 
 const ICONS = {
-    drive: { Icon: SiGoogledrive, className: 'footer-link-drive' },
-    hotel: { Icon: MdHotel, className: 'footer-link-booking' },
-    map: { Icon: FiMapPin, className: 'footer-link-map' },
-    money: { Icon: FaMoneyBillWave, className: 'footer-link-tricount' },
-    link: { Icon: FiLink, className: 'footer-link-map' }
+    drive: SiGoogledrive,
+    hotel: MdHotel,
+    map: FiMapPin,
+    money: FaMoneyBillWave,
+    link: FiLink
 };
 
 function FooterSection({ quickLinks = [], footerText }) {
@@ -23,10 +23,17 @@ function FooterSection({ quickLinks = [], footerText }) {
                         <h4 className="footer-title">Accesos rápidos</h4>
                         <div className="footer-links">
                             {links.map(link => {
-                                const { Icon, className } = ICONS[link.icon] || ICONS.link;
+                                const Icon = ICONS[link.icon] || ICONS.link;
 
                                 return (
-                                    <a key={`${link.label}-${link.url}`} href={link.url} target="_blank" rel="noreferrer" className={`footer-link ${className}`}>
+                                    <a
+                                        key={`${link.label}-${link.url}`}
+                                        href={link.url}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="footer-link"
+                                        style={link.color ? { '--link-color': link.color } : undefined}
+                                    >
                                         <Icon className="footer-link-icon" aria-hidden="true" />
                                         <span>{link.label}</span>
                                     </a>

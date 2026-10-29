@@ -18,7 +18,20 @@ const tripConfig = {
         description: "Organización de mi viaje",    // Descripción (metadatos de la web)
         footerText: "Mi Viaje · XXXX · País",       // Texto inferior del pie de página
         flagUrl: "",                                // Opcional: URL de una imagen a ambos lados del título (p. ej. https://flagcdn.com/w80/es.png)
-        themeColor: "#21468b"                       // Color de la barra del navegador en móvil
+        heroImage: ""                               // Opcional: imagen de fondo de la cabecera (URL o ruta en public/, p. ej. "/portada.jpg")
+    },
+
+    // ---------- Tema visual ----------
+    // name: tema por defecto: "ocean" | "forest" | "sunset" | "lavender" | "rose" | "graphite"
+    //       (puedes añadir los tuyos en src/config/themes.js)
+    // mode: "light" (claro) | "dark" (oscuro) | "auto" (según el sistema del visitante)
+    // allowThemePicker: true (por defecto) permite al visitante elegir cualquier tema desde el menú
+    // allowToggle: true (por defecto) muestra el botón para alternar claro/oscuro en el menú
+    theme: {
+        name: "ocean",
+        mode: "light",
+        allowThemePicker: true,
+        allowToggle: true
     },
 
     // ---------- Modo fiesta (opcional, desactivado por defecto) ----------
@@ -36,23 +49,27 @@ const tripConfig = {
 
     // ---------- Accesos rápidos (pie de página) ----------
     // icon: "drive" | "hotel" | "map" | "money" | "link"
+    // color: opcional (hexadecimal). Si no se indica, se elige un color aleatorio.
     quickLinks: [
         { label: "Archivos", url: "https://drive.google.com/", icon: "drive" },
         { label: "Hotel Ciudad A", url: "https://www.booking.com/", icon: "hotel" },
         { label: "Mapa Ciudad A", url: "https://www.google.com/maps", icon: "map" },
-        { label: "Gastos", url: "https://tricount.com/", icon: "money" }
+        { label: "Gastos", url: "https://tricount.com/", icon: "money", color: "#16a34a" }
     ],
 
     // ---------- Secciones ----------
     // Se muestran en este orden. Puedes añadir, borrar o reordenar las que quieras.
     // Tipos: "flights" | "hotel" | "city" | "transport"
     // Cada sección necesita un `id` único (sin espacios) y un `menuLabel` (texto del menú).
+    // `iconColor` (opcional, hexadecimal): color del icono y de los acentos de la sección.
+    // Si no se indica, se elige un color aleatorio distinto para cada sección.
     sections: [
         {
             type: "flights",
             id: "vuelos-ida",
             menuLabel: "Vuelos ida",
             title: "Vuelos de ida",
+            iconColor: "#2563eb",                       // Ejemplo de color fijo; el resto de secciones usan uno aleatorio
             items: [
                 {
                     from: "Destino inicio (INI)",
@@ -90,8 +107,7 @@ const tripConfig = {
             title: "Ciudad A",
             description: "Ciudad A y alrededores",
             mapUrl: "https://www.google.com/maps/embed?pb=",  // URL de "Insertar un mapa" de Google Maps (o Mi Mapa)
-            editUrl: "",                                       // Opcional: enlace para editar el mapa
-            color: "#0d6bc6"                                   // Color de acento de la sección
+            editUrl: ""                                        // Opcional: enlace para editar el mapa
         },
         {
             type: "transport",
@@ -129,7 +145,7 @@ const tripConfig = {
             description: "Ciudad B y alrededores",
             mapUrl: "https://www.google.com/maps/embed?pb=",
             editUrl: "",
-            color: "#13845f"
+            iconColor: "#13845f"
         },
         {
             type: "transport",
@@ -166,8 +182,7 @@ const tripConfig = {
             title: "Ciudad C",
             description: "Ciudad C y alrededores",
             mapUrl: "https://www.google.com/maps/embed?pb=",
-            editUrl: "",
-            color: "#d9480f"
+            editUrl: ""
         },
         {
             type: "flights",

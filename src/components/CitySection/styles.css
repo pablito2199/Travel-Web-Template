@@ -1,10 +1,10 @@
 .city-section-card {
-    background: rgba(255, 255, 255, 0.7);
+    background: var(--surface);
     border-radius: 18px;
     overflow: hidden;
     margin: 0;
     box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
-    border: 1px solid rgba(148, 163, 184, 0.18);
+    border: 1px solid var(--border);
     backdrop-filter: blur(6px);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
     animation: fadeUp 0.55s ease both;
@@ -41,7 +41,7 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 1.45rem;
-    color: #1e293b;
+    color: var(--text-strong);
 }
 
 .city-title-icon {
@@ -51,7 +51,7 @@
 }
 
 .city-desc {
-    color: #475569;
+    color: var(--text-muted);
     margin: 0;
     font-size: 0.92rem;
     line-height: 1.45;
@@ -90,25 +90,26 @@
 }
 
 .city-section-card .city-title-icon {
-    color: var(--city-color, #0d6bc6);
+    color: var(--icon-color, var(--accent));
 }
 
 .city-section-card .city-map-link {
-    background: var(--city-color, #0d6bc6);
-    box-shadow: 0 10px 22px color-mix(in srgb, var(--city-color, #0d6bc6) 25%, transparent);
+    background: var(--icon-color, var(--accent));
+    box-shadow: 0 10px 22px color-mix(in srgb, var(--icon-color, var(--accent)) 25%, transparent);
 }
 
 .city-section-card .map-frame {
-    border-color: color-mix(in srgb, var(--city-color, #0d6bc6) 28%, transparent);
+    border-color: color-mix(in srgb, var(--icon-color, var(--accent)) 28%, transparent);
 }
 
 .map-frame {
     overflow: hidden;
     border-radius: 20px;
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    background: #eef3f9;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85), 0 20px 50px rgba(15, 23, 42, 0.08);
+    border: 1px solid var(--border);
+    background: var(--map-bg);
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
     aspect-ratio: 16 / 10;
+    max-height: 75vh;
     min-height: 340px;
 }
 
@@ -117,7 +118,7 @@
     height: 100%;
     border: 0;
     display: block;
-    background: #eef3f9;
+    background: var(--map-bg);
 }
 
 .city-section-card.party {
