@@ -1,7 +1,9 @@
 # Guía para definir tu viaje
 
-Todo el contenido de la web sale de **un único archivo**: [`src/config/tripConfig.js`](src/config/tripConfig.js).
-Los valores que trae son de ejemplo; reemplázalos por los tuyos. Los campos marcados como *(opcional)* pueden dejarse vacíos (`""`) o borrarse y la web no los mostrará.
+Todo el contenido de la web sale de **un único archivo JSON**: [`src/config/tripConfig.json`](src/config/tripConfig.json).
+Los valores que trae son de ejemplo; reemplázalos por los tuyos. También puedes pulsar **Personalizar viaje** mientras ejecutas la web localmente para editarlo con formularios y botones, sin escribir JSON. Desde ahí puedes crear, borrar y reordenar secciones, y añadir o eliminar vuelos y accesos rápidos. Los cambios se guardan automáticamente en ese archivo y se reflejan en la página. Los campos marcados como *(opcional)* pueden dejarse vacíos (`""`) o borrarse y la web no los mostrará.
+
+El editor guarda directamente el archivo del proyecto y, por seguridad del navegador, solo está disponible en desarrollo con `npm start`. La versión estática generada con `npm run build` no puede sobrescribir el JSON del proyecto.
 
 ## 1. `meta` – datos generales
 
@@ -62,7 +64,7 @@ Se muestran **en el orden de la lista** y generan automáticamente el menú. Tod
 
 ```bash
 npm install
-npm start      # desarrollo en http://localhost:3000
+npm start      # desarrollo y editor en http://localhost:3000
 npm run build  # versión de producción
 ```
 

@@ -1,7 +1,7 @@
 /**
  * Temas disponibles. Cada tema tiene una variante clara (light) y otra oscura (dark).
  * Para crear uno propio, añade una entrada nueva con el mismo formato y
- * escribe su nombre en `theme.name` dentro de tripConfig.js.
+ * escribe su nombre en `theme.name` dentro de tripConfig.json.
  *
  * Campos de cada variante (solo hay que indicar los que cambian respecto a la base):
  *  accent      color principal (menú lateral, cabecera, barra de progreso)

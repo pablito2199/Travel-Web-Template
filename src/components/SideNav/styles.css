@@ -140,6 +140,16 @@
     background: rgba(255, 255, 255, 0.22);
 }
 
+.side-nav-customize {
+    background: #fff;
+    border-color: #fff;
+    color: #0f172a;
+}
+
+.side-nav-customize:hover {
+    background: rgba(255, 255, 255, 0.88);
+}
+
 /* Móvil y tablet: barra superior con desplegable */
 @media (max-width: 900px) {
     .side-nav-actions {
@@ -153,9 +163,14 @@
     .is-open .side-nav-footer {
         display: flex;
         flex-direction: row;
+        flex-wrap: wrap;
         align-items: center;
         justify-content: space-between;
         gap: 12px;
+    }
+
+    .side-nav-customize {
+        flex: 1 1 100%;
     }
 
     .theme-picker {

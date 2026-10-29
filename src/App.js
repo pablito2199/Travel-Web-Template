@@ -1,30 +1,23 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
 import CitySection from './components/CitySection/CitySection';
+import ConfigEditor from './components/ConfigEditor/ConfigEditor';
 import FlightSection from './components/FlightSection/FlightSection';
 import FooterSection from './components/FooterSection/FooterSection';
 import HeaderSection from './components/HeaderSection/HeaderSection';
 import HotelSection from './components/HotelSection/HotelSection';
 import SideNav from './components/SideNav/SideNav';
 import TravelSection from './components/TravelSection/TravelSection';
-import tripConfig from './config/tripConfig';
+import tripConfig from './config/tripConfig.json';
 import { DEFAULT_THEME, resolveTheme, themes, toCssVars } from './config/themes';
 import usePartyMode from './hooks/usePartyMode';
 import { createColorPicker } from './utils/colors';
 import { getSectionIcon, LinkIcon } from './utils/sectionIcons';
 import './styles/shared.css';
 
-const { meta, theme: themeCfg = {}, partyMode = {}, quickLinks: rawQuickLinks = [], sections: rawSections = [] } = tripConfig;
-const partyEnabled = Boolean(partyMode.enabled && partyMode.audio);
 const partyAsset = (file) => (file ? `${process.env.PUBLIC_URL}/party/${file}` : '');
 
-// Colores resueltos una sola vez por carga: los indicados en la config o aleatorios
-const pickColor = createColorPicker();
-const sections = rawSections.map(section => ({ ...section, iconColor: pickColor(section.iconColor) }));
-const quickLinks = rawQuickLinks.map(link => ({ ...link, color: pickColor(link.color) }));
-
 const MODE_KEY = 'trip-theme-mode';
-const baseMode = themeCfg.mode || 'light';
 
 const systemMode = () => (
     window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
@@ -38,7 +31,8 @@ const readSaved = () => {
     }
 };
 
-const getInitialMode = () => {
+const getInitialMode = (themeCfg = {}) => {
+    const baseMode = themeCfg.mode || 'light';
     const fallback = baseMode === 'auto' ? systemMode() : baseMode;
     const saved = readSaved();
 
@@ -49,13 +43,13 @@ const getInitialMode = () => {
     return fallback;
 };
 
-const getInitialTheme = () => {
+const getInitialTheme = (themeCfg = {}) => {
     const saved = readSaved();
 
     return themeCfg.allowThemePicker !== false && themes[saved.theme] ? saved.theme : (themeCfg.name || DEFAULT_THEME);
 };
 
-const saveChoice = (changes) => {
+const saveChoice = (changes, baseMode) => {
     try {
         localStorage.setItem(MODE_KEY, JSON.stringify({ ...readSaved(), base: baseMode, ...changes }));
     } catch (error) {
@@ -85,26 +79,165 @@ function renderSection(section, isPartyTime) {
     }
 }
 
+function validateTripConfig(config) {
+    if (!config || typeof config !== 'object' || Array.isArray(config)) {
+        throw new Error('La configuración debe ser un objeto JSON.');
+    }
+    if (!config.meta || typeof config.meta !== 'object' || Array.isArray(config.meta)) {
+        throw new Error('Falta el objeto "meta".');
+    }
+    if (!Array.isArray(config.quickLinks) || !Array.isArray(config.sections)) {
+        throw new Error('"quickLinks" y "sections" deben ser listas.');
+    }
+    if (config.quickLinks.some(link => !link || typeof link !== 'object' || Array.isArray(link))) {
+        throw new Error('Cada acceso rápido debe ser un objeto.');
+    }
+
+    const ids = new Set();
+    config.sections.forEach(section => {
+        if (!section || typeof section !== 'object' || Array.isArray(section)) {
+            throw new Error('Cada sección debe ser un objeto.');
+        }
+        if (!['flights', 'hotel', 'city', 'transport'].includes(section.type)) {
+            throw new Error(`Tipo de sección no válido: "${section.type}".`);
+        }
+        if (typeof section.id !== 'string' || !section.id.trim() || ids.has(section.id)) {
+            throw new Error('Cada sección necesita un id único y no vacío.');
+        }
+        if (section.type === 'flights' && !Array.isArray(section.items)) {
+            throw new Error(`La sección "${section.id}" necesita una lista "items".`);
+        }
+        if (section.type === 'flights' && section.items.some(item => !item || typeof item !== 'object' || Array.isArray(item))) {
+            throw new Error(`Cada elemento de "${section.id}" debe ser un objeto.`);
+        }
+        ids.add(section.id);
+    });
+}
+
 function App() {
+    const [config, setConfig] = useState(tripConfig);
+    const [editorOpen, setEditorOpen] = useState(false);
+    const [jsonError, setJsonError] = useState('');
+    const [saveState, setSaveState] = useState('saved');
+    const [pendingConfig, setPendingConfig] = useState(null);
     const [showBackToTop, setShowBackToTop] = useState(false);
     const [scrollProgress, setScrollProgress] = useState(0);
     const [activeId, setActiveId] = useState('');
-    const [mode, setMode] = useState(getInitialMode);
+    const [mode, setMode] = useState(() => getInitialMode(tripConfig.theme));
+    const colorPickerRef = useRef(null);
+    const colorCacheRef = useRef(new Map());
+    const saveQueueRef = useRef(Promise.resolve());
+    const saveVersionRef = useRef(0);
 
-    const [themeName, setThemeName] = useState(getInitialTheme);
+    if (!colorPickerRef.current) {
+        colorPickerRef.current = createColorPicker();
+    }
+
+    const {
+        meta = {},
+        theme: themeCfg = {},
+        partyMode = {},
+        quickLinks: rawQuickLinks = [],
+        sections: rawSections = []
+    } = config;
+    const partyEnabled = Boolean(partyMode.enabled && partyMode.audio);
+    const themeMode = themeCfg.mode;
+    const themeDefaultName = themeCfg.name;
+    const allowThemePicker = themeCfg.allowThemePicker;
+    const allowToggle = themeCfg.allowToggle;
+    const baseMode = themeMode || 'light';
+    const sections = useMemo(() => rawSections.map(section => {
+        const key = `section:${section.id}`;
+        const color = section.iconColor || colorCacheRef.current.get(key) || colorPickerRef.current();
+        colorCacheRef.current.set(key, color);
+        return { ...section, iconColor: color };
+    }), [rawSections]);
+    const quickLinks = useMemo(() => rawQuickLinks.map((link, index) => {
+        const key = `link:${index}:${link.label}:${link.url}`;
+        const color = link.color || colorCacheRef.current.get(key) || colorPickerRef.current();
+        colorCacheRef.current.set(key, color);
+        return { ...link, color };
+    }), [rawQuickLinks]);
+
+    const [themeName, setThemeName] = useState(() => getInitialTheme(tripConfig.theme));
 
     const palette = resolveTheme(themeName, mode);
+
+    useEffect(() => {
+        const themeSettings = {
+            mode: themeMode,
+            name: themeDefaultName,
+            allowThemePicker,
+            allowToggle
+        };
+        setMode(getInitialMode(themeSettings));
+        setThemeName(getInitialTheme(themeSettings));
+    }, [themeMode, themeDefaultName, allowToggle, allowThemePicker]);
 
     const toggleMode = () => {
         const next = mode === 'dark' ? 'light' : 'dark';
         setMode(next);
-        saveChoice({ mode: next });
+        saveChoice({ mode: next }, baseMode);
     };
 
     const selectTheme = (name) => {
         setThemeName(name);
-        saveChoice({ theme: name });
+        saveChoice({ theme: name }, baseMode);
     };
+
+    const handleConfigChange = (nextConfig) => {
+        saveVersionRef.current += 1;
+
+        try {
+            validateTripConfig(nextConfig);
+            setConfig(nextConfig);
+            setPendingConfig(nextConfig);
+            setJsonError('');
+            setSaveState('pending');
+        } catch (error) {
+            setPendingConfig(null);
+            setJsonError(error.message);
+            setSaveState('invalid');
+        }
+    };
+
+    useEffect(() => {
+        if (!pendingConfig) {
+            return undefined;
+        }
+
+        const version = saveVersionRef.current;
+        const timeout = setTimeout(() => {
+            const save = async () => {
+                if (version === saveVersionRef.current) {
+                    setSaveState('saving');
+                }
+                const response = await fetch('/api/trip-config', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(pendingConfig)
+                });
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.error || 'No se pudo guardar tripConfig.json.');
+                }
+
+                if (version === saveVersionRef.current) {
+                    setSaveState('saved');
+                }
+            };
+
+            saveQueueRef.current = saveQueueRef.current.then(save, save).catch(error => {
+                if (version === saveVersionRef.current) {
+                    setJsonError(error.message);
+                    setSaveState('error');
+                }
+            });
+        }, 500);
+
+        return () => clearTimeout(timeout);
+    }, [pendingConfig]);
 
     const {
         isPartyTime,
@@ -120,7 +253,7 @@ function App() {
     useEffect(() => {
         document.title = meta.title;
         document.querySelector('meta[name="description"]')?.setAttribute('content', meta.description);
-    }, []);
+    }, [meta.title, meta.description]);
 
     useEffect(() => {
         document.querySelector('meta[name="theme-color"]')?.setAttribute('content', palette.accent);
@@ -191,7 +324,7 @@ function App() {
             window.removeEventListener('touchstart', releaseLock);
             window.removeEventListener('keydown', releaseLock);
         };
-    }, []);
+    }, [sections, quickLinks]);
 
     // Al pulsar un enlace se marca ese, aunque la sección no pueda alcanzar la línea de referencia
     const handleNavigate = (href) => {
@@ -221,7 +354,7 @@ function App() {
         anchors.forEach(anchor => revealObserver.observe(anchor));
 
         return () => revealObserver.disconnect();
-    }, []);
+    }, [sections]);
 
     const scrollToTop = () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -236,6 +369,7 @@ function App() {
         })),
         ...(quickLinks.length ? [{ label: 'Accesos rápidos', href: '#footer', icon: LinkIcon, color: palette.accent }] : [])
     ];
+    const canEditConfig = process.env.NODE_ENV === 'development';
 
     return (
         <div
@@ -252,10 +386,14 @@ function App() {
                 activeHref={activeId ? `#${activeId}` : ''}
                 onNavigate={handleNavigate}
                 mode={mode}
-                onToggleMode={themeCfg.allowToggle !== false ? toggleMode : undefined}
-                themeOptions={themeCfg.allowThemePicker !== false ? themeOptions : []}
+                onToggleMode={allowToggle !== false ? toggleMode : undefined}
+                themeOptions={allowThemePicker !== false ? themeOptions : []}
                 themeName={themeName}
                 onSelectTheme={selectTheme}
+                onCustomize={canEditConfig ? () => {
+                    setJsonError('');
+                    setEditorOpen(true);
+                } : undefined}
             />
 
             <div className="page">
@@ -280,6 +418,16 @@ function App() {
                     <FooterSection quickLinks={quickLinks} footerText={meta.footerText} />
                 </div>
             </div>
+
+            {editorOpen && (
+                <ConfigEditor
+                    config={config}
+                    onChange={handleConfigChange}
+                    onClose={() => setEditorOpen(false)}
+                    saveState={saveState}
+                    error={jsonError}
+                />
+            )}
 
             <button
                 type="button"

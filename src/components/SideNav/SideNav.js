@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { FiMoon, FiSun } from 'react-icons/fi';
+import { FiEdit3, FiMoon, FiSun } from 'react-icons/fi';
 import './styles.css';
 
-function SideNav({ title, links = [], activeHref, onNavigate, mode, onToggleMode, themeOptions = [], themeName, onSelectTheme }) {
+function SideNav({ title, links = [], activeHref, onNavigate, mode, onToggleMode, themeOptions = [], themeName, onSelectTheme, onCustomize }) {
     const [open, setOpen] = useState(false);
     const rootRef = useRef(null);
 
@@ -76,8 +76,21 @@ function SideNav({ title, links = [], activeHref, onNavigate, mode, onToggleMode
                 })}
             </ul>
 
-            {(onToggleMode || themeOptions.length > 0) && (
+            {(onCustomize || onToggleMode || themeOptions.length > 0) && (
                 <div className="side-nav-footer">
+                    {onCustomize && (
+                        <button
+                            type="button"
+                            className="side-nav-mode side-nav-customize"
+                            onClick={() => {
+                                onCustomize();
+                                setOpen(false);
+                            }}
+                        >
+                            <FiEdit3 aria-hidden="true" />
+                            <span>Personalizar viaje</span>
+                        </button>
+                    )}
                     {themeOptions.length > 0 && (
                         <div className="theme-picker" role="radiogroup" aria-label="Tema">
                             {themeOptions.map(option => (
