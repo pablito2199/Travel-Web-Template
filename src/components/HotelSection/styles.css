@@ -1,0 +1,339 @@
+.info-section.hotels {
+    margin-top: 0;
+}
+
+.hotel-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.hotel-card {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 14px 28px rgba(15, 23, 42, 0.11);
+    border-left: 6px solid #003580;
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    backdrop-filter: blur(6px);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    animation: fadeUp 0.55s ease both;
+}
+
+.hotel-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 30px rgba(15, 23, 42, 0.15);
+}
+
+.hotel-card.party {
+    animation: shake 0.4s infinite;
+}
+
+.hotel-header-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 15px;
+}
+
+.hotel-title {
+    display: block;
+    font-size: 1.16rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 5px 0;
+}
+
+.hotel-title-icon {
+    font-size: 1rem;
+    color: #d14b72;
+    margin-right: 0.42rem;
+    vertical-align: -1px;
+}
+
+.hotel-address {
+    display: block;
+    font-size: 0.88rem;
+    color: #1a0dab;
+    text-decoration: none;
+    margin-top: 4px;
+}
+
+.hotel-address-icon {
+    font-size: 0.9rem;
+    margin-right: 0.3rem;
+    vertical-align: -1px;
+}
+
+.hotel-address:hover {
+    text-decoration: underline;
+}
+
+.hotel-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 15px;
+    padding: 12px;
+    background: linear-gradient(145deg, #f8faff, #f0f6ff);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    box-sizing: border-box;
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.hotel-details-grid:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 28px rgba(15, 23, 42, 0.14);
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-label {
+    font-size: 0.7rem;
+    color: #888;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.detail-value {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.detail-hour {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.8rem;
+    color: #003580;
+    font-weight: 500;
+}
+
+.detail-value-alt {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #222;
+    background: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.detail-icon {
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+.detail-icon-moon {
+    color: #d4a84f;
+}
+
+.btn-booking {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background-color: #003580;
+    color: #ffffff;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+    box-shadow: 0 8px 16px rgba(0, 53, 128, 0.24);
+}
+
+.hotel-actions .btn-drive {
+    justify-content: center;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.btn-booking:hover {
+    background-color: #002254;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 20px rgba(0, 53, 128, 0.32);
+}
+
+.icon-booking {
+    font-size: 1.3rem;
+}
+
+.hotel-actions .drive-icon-wrapper {
+    background: #ffffff;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+    flex-shrink: 0;
+}
+
+.hotel-actions .icon-google {
+    color: #f4b400;
+}
+
+.hotel-actions .btn-drive:hover {
+    background: #f4b400 !important;
+    border-radius: 8px;
+}
+
+.hotel-actions .btn-drive:active {
+    border-radius: 8px;
+}
+
+@media (max-width: 600px) {
+    .hotel-details-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .duration {
+        grid-column: span 2;
+        text-align: center;
+    }
+
+    .hotel-actions {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .hotel-actions .btn-booking,
+    .hotel-actions .btn-drive {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Contact block styles */
+.hotel-contact {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: linear-gradient(180deg, #ffffff, #fbfdff);
+    border-radius: 10px;
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    margin-bottom: 16px;
+    box-sizing: border-box;
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.hotel-contact:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 28px rgba(15, 23, 42, 0.14);
+}
+
+.hotel-contact .contact-title {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #0f1724;
+}
+
+.contact-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #0b5394;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.contact-item:hover {
+    text-decoration: underline;
+}
+
+.contact-icon {
+    font-size: 1.05rem;
+    color: #0071c2;
+    flex-shrink: 0;
+}
+
+.contact-item.reservation {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #1e293b;
+    text-decoration: none;
+}
+
+.contact-item.reservation:hover {
+    text-decoration: none;
+}
+
+.reservation-number {
+    background: #eef6ff;
+    color: #003580;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 800;
+    margin-left: 6px;
+    text-decoration: none;
+}
+
+/* Layout tweaks for larger screens */
+@media (min-width: 900px) {
+    .hotel-card {
+        padding: 22px;
+    }
+
+    .hotel-main {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        width: 100%;
+    }
+
+    .hotel-details-grid,
+    .hotel-contact,
+    .hotel-actions {
+        width: 100%;
+        max-width: 100%;
+        margin-inline: auto;
+        box-sizing: border-box;
+    }
+
+    .hotel-actions {
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn-hotel-action {
+        flex: 1 1 0;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .hotel-actions .btn-booking,
+    .hotel-actions .btn-drive {
+        width: 100%;
+    }
+}
