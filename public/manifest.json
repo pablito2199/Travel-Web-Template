@@ -1,15 +1,22 @@
 {
+    "id": "./",
     "short_name": "Mi Viaje",
     "name": "Mi Viaje",
     "icons": [
         {
-            "src": "favicon.svg",
-            "sizes": "any",
-            "type": "image/svg+xml"
+            "src": "logo192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "logo512.png",
+            "sizes": "512x512",
+            "type": "image/png"
         }
     ],
-    "start_url": ".",
+    "start_url": "./",
+    "scope": "./",
     "display": "standalone",
-    "theme_color": "#000000",
+    "theme_color": "#21468b",
     "background_color": "#ffffff"
 }

@@ -8,3 +8,11 @@ root.render(
         <App />
     </React.StrictMode>
 );
+
+if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+    navigator.serviceWorker
+        .register(`${process.env.PUBLIC_URL}/service-worker.js`)
+        .catch((error) => {
+            console.error('No se pudo registrar el service worker:', error);
+        });
+}
